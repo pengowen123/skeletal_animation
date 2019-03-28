@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
-use std::rc::Rc;
+use std::sync::Arc;
 
 use rustc_serialize::{Decodable, json};
 
@@ -21,7 +21,7 @@ pub struct AssetDefs {
 /// Asset manager - manages memory for loaded assets...?
 ///
 pub struct AssetManager<T: Transform> {
-    pub animation_clips: HashMap<String, Rc<AnimationClip<T>>>,
+    pub animation_clips: HashMap<String, Arc<AnimationClip<T>>>,
     pub controller_defs: HashMap<String, AnimationControllerDef>
 }
 
@@ -41,7 +41,7 @@ impl<T: Transform> AssetManager<T> {
         if let Some(animation_clips) = asset_defs.animation_clips {
             for clip_def in animation_clips.iter() {
                 let clip = AnimationClip::from_def(clip_def);
-                self.animation_clips.insert(clip_def.name.clone(), Rc::new(clip));
+                self.animation_clips.insert(clip_def.name.clone(), Arc::new(clip));
             }
         }
 
@@ -54,7 +54,7 @@ impl<T: Transform> AssetManager<T> {
                     AnimationClip::as_difference_clip(source_clip, reference_clip)
                 };
 
-                self.animation_clips.insert(difference_clip_def.name.clone(), Rc::new(clip));
+                self.animation_clips.insert(difference_clip_def.name.clone(), Arc::new(clip));
             }
         }
 

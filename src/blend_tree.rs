@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::rc::Rc;
+use std::sync::Arc;
 
 use rustc_serialize::{Decodable, Decoder};
 
@@ -108,7 +108,7 @@ pub struct AnimBlendTree<T: Transform> {
     additive_nodes: Vec<AdditiveAnimNode>,
     ik_nodes: Vec<IKNode>,
     clip_nodes: Vec<ClipAnimNode<T>>,
-    skeleton: Rc<Skeleton>,
+    skeleton: Arc<Skeleton>,
 }
 
 impl<T: Transform> AnimBlendTree<T> {
@@ -122,8 +122,8 @@ impl<T: Transform> AnimBlendTree<T> {
     /// * `animations` - A mapping from ClipIds to shared AnimationClip instances
     pub fn from_def(
         def: BlendTreeNodeDef,
-        animations: &HashMap<ClipId, Rc<AnimationClip<T>>>,
-        skeleton: Rc<Skeleton>,
+        animations: &HashMap<ClipId, Arc<AnimationClip<T>>>,
+        skeleton: Arc<Skeleton>,
     ) -> AnimBlendTree<T> {
 
         let mut tree = AnimBlendTree {
@@ -192,7 +192,7 @@ impl<T: Transform> AnimBlendTree<T> {
     fn add_node(
         &mut self,
         def: BlendTreeNodeDef,
-        animations: &HashMap<ClipId, Rc<AnimationClip<T>>>,
+        animations: &HashMap<ClipId, Arc<AnimationClip<T>>>,
         skeleton: &Skeleton
     ) -> AnimNodeHandle {
         match def {

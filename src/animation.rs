@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::path::Path;
-use std::rc::Rc;
+use std::sync::Arc;
 
 use collada::document::ColladaDocument;
 use collada;
@@ -220,7 +220,7 @@ impl<T: Transform> AnimationClip<T> {
 /// An instance of an AnimationClip which tracks playback parameters
 pub struct ClipInstance<T: Transform> {
     /// Shared clip reference
-    pub clip: Rc<AnimationClip<T>>,
+    pub clip: Arc<AnimationClip<T>>,
 
     /// Controller clock time at animation start
     pub start_time: f32,
@@ -234,7 +234,7 @@ pub struct ClipInstance<T: Transform> {
 
 impl<T: Transform> ClipInstance<T> {
 
-    pub fn new(clip: Rc<AnimationClip<T>>) -> ClipInstance<T> {
+    pub fn new(clip: Arc<AnimationClip<T>>) -> ClipInstance<T> {
         ClipInstance {
             clip: clip,
             start_time: 0.0,

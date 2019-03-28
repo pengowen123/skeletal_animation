@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::rc::Rc;
+use std::sync::Arc;
 
 use rustc_serialize::{Decodable, Decoder};
 
@@ -161,7 +161,7 @@ pub struct AnimationController<T: Transform> {
     parameters: HashMap<String, f32>,
 
     /// Shared reference to the skeleton this controller is using
-    skeleton: Rc<Skeleton>,
+    skeleton: Arc<Skeleton>,
 
     /// Tracks seconds since controller started running
     local_clock: f64,
@@ -185,7 +185,12 @@ impl<T: Transform> AnimationController<T> {
 
     /// Create an AnimationController instance from its definition, the desired skeleton, and a
     /// collection of currently loaded animation clips.
-    pub fn new(controller_def: AnimationControllerDef, skeleton: Rc<Skeleton>, animations: &HashMap<ClipId, Rc<AnimationClip<T>>>) -> AnimationController<T> {
+    pub fn new(
+        controller_def: AnimationControllerDef,
+        skeleton: Arc<Skeleton>,
+        animations: &HashMap<ClipId,
+        Arc<AnimationClip<T>>>,
+    ) -> AnimationController<T> {
 
         let mut parameters = HashMap::new();
 
